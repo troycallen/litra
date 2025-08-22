@@ -4,6 +4,7 @@ export default function Home() {
   const [query, setQuery] = useState('')
   const [papers, setPapers] = useState([])
   const [loading, setLoading] = useState(false)
+  const [expandedPaper, setExpandedPaper] = useState(null)
 
   const searchPapers = async () => {
     if (!query.trim()) return
@@ -20,6 +21,7 @@ export default function Home() {
       setLoading(false)
     }
   }
+
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -64,10 +66,60 @@ export default function Home() {
               <h2 className="text-lg font-semibold mb-4">Found {papers.length} papers</h2>
               <div className="space-y-4">
                 {papers.map((paper, index) => (
-                  <div key={index} className="border-l-4 border-blue-500 pl-4">
-                    <h3 className="font-medium text-gray-900">{paper.title}</h3>
-                    <p className="text-sm text-gray-600 mt-1">{paper.authors}</p>
-                    <p className="text-sm text-gray-700 mt-2">{paper.abstract}</p>
+                  <div key={index}>
+                    {/* Paper Card */}
+                    <div 
+                      className="border-l-4 border-blue-500 pl-4 hover:bg-blue-50 cursor-pointer rounded-r-lg p-3 transition-colors border border-transparent hover:border-blue-200"
+                      onClick={() => {
+                        console.log('Paper clicked:', paper.title)
+                        setExpandedPaper(expandedPaper?.title === paper.title ? null : paper)
+                      }}
+                    >
+                      <h3 className="font-medium text-gray-900 hover:text-blue-600">{paper.title}</h3>
+                      <p className="text-sm text-gray-600 mt-1">{paper.authors}</p>
+                      <p className="text-sm text-gray-500 mt-1">Published: {new Date(paper.publishedDate).toLocaleDateString()}</p>
+                      <div className="mt-2 flex items-center text-xs text-blue-600">
+                        <span>{expandedPaper?.title === paper.title ? 'Hide details ↑' : 'Click to view details →'}</span>
+                      </div>
+                    </div>
+
+                    {/* Expanded Details */}
+                    {expandedPaper?.title === paper.title && (
+                      <div className="mt-4 ml-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                        <div className="space-y-4">
+                          {/* Full Abstract */}
+                          <div>
+                            <h4 className="font-medium text-gray-900 mb-2">Full Abstract</h4>
+                            <p className="text-sm text-gray-700 leading-relaxed">{paper.abstract}</p>
+                          </div>
+
+                          {/* Paper Info */}
+                          <div className="grid grid-cols-2 gap-4 text-sm">
+                            <div>
+                              <span className="font-medium text-gray-600">Authors:</span>
+                              <p className="text-gray-900">{paper.authors}</p>
+                            </div>
+                            <div>
+                              <span className="font-medium text-gray-600">Published:</span>
+                              <p className="text-gray-900">{new Date(paper.publishedDate).toLocaleDateString()}</p>
+                            </div>
+                          </div>
+
+                          {/* Actions */}
+                          <div className="flex gap-2 pt-2">
+                            <button className="px-3 py-1 bg-blue-100 text-blue-700 rounded text-sm hover:bg-blue-200">
+                              📊 Extract Concepts
+                            </button>
+                            <button className="px-3 py-1 bg-green-100 text-green-700 rounded text-sm hover:bg-green-200">
+                              🔗 Find Related
+                            </button>
+                            <button className="px-3 py-1 bg-purple-100 text-purple-700 rounded text-sm hover:bg-purple-200">
+                              ⭐ Add to Graph
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
@@ -106,6 +158,7 @@ export default function Home() {
           )}
         </div>
       </div>
+
     </div>
   )
 }
