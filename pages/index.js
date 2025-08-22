@@ -24,13 +24,31 @@ export default function Home() {
 
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div style={{
+      minHeight: '100vh',
+      backgroundColor: '#f8fafc'
+    }}>
       {/* Header */}
-      <header className="bg-white border-b-2 border-indigo-100 shadow-sm">
-        <div className="max-w-7xl mx-auto px-6 py-6">
+      <header style={{
+        backgroundColor: 'white',
+        borderBottom: '1px solid #e2e8f0',
+        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)'
+      }}>
+        <div className="max-w-7xl mx-auto px-6 py-8">
           <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-bold text-gray-900 tracking-tight">LiTRA</h1>
-            <p className="text-gray-600 font-medium">Literature Review Assistant</p>
+            <h1 style={{
+              fontSize: '2.5rem',
+              fontWeight: '700',
+              letterSpacing: '-0.025em',
+              color: '#1e293b'
+            }}>
+              LiTRA
+            </h1>
+            <p style={{
+              color: '#64748b',
+              fontSize: '1.125rem',
+              fontWeight: '500'
+            }}>Literature Review Assistant</p>
           </div>
         </div>
       </header>
@@ -38,29 +56,57 @@ export default function Home() {
       <div className="max-w-6xl mx-auto px-6 py-12">
         {/* Search Section */}
         <div className="mb-12">
-          <div className="max-w-3xl mx-auto">
-            <div className="flex gap-3">
-              <input
-                type="text"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && searchPapers()}
-                placeholder="Search research papers..."
-                className="flex-1 px-4 py-4 border-2 border-gray-200 bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all shadow-sm"
-              />
-              <button
-                onClick={searchPapers}
-                disabled={loading}
-                className="px-8 py-4 font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm hover:shadow-md"
-                style={{
-                  backgroundColor: loading ? '#9ca3af' : '#4f46e5',
-                  color: 'white',
-                }}
-                onMouseEnter={(e) => !loading && (e.target.style.backgroundColor = '#4338ca')}
-                onMouseLeave={(e) => !loading && (e.target.style.backgroundColor = '#4f46e5')}
-              >
-                {loading ? 'Searching...' : 'Search'}
-              </button>
+          <div className="max-w-4xl mx-auto">
+            <div style={{
+              backgroundColor: 'white',
+              borderRadius: '12px',
+              border: '1px solid #e2e8f0',
+              boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
+              padding: '2rem'
+            }}>
+              <div className="flex gap-4">
+                <input
+                  type="text"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && searchPapers()}
+                  placeholder="Search research papers..."
+                  style={{
+                    flex: 1,
+                    padding: '1rem 1.5rem',
+                    fontSize: '1.125rem',
+                    fontWeight: '500',
+                    color: '#1e293b',
+                    backgroundColor: '#f8fafc',
+                    border: '2px solid #e2e8f0',
+                    borderRadius: '8px',
+                    outline: 'none',
+                    transition: 'border-color 0.2s'
+                  }}
+                  onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
+                  onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
+                />
+                <button
+                  onClick={searchPapers}
+                  disabled={loading}
+                  style={{
+                    padding: '1rem 2rem',
+                    fontSize: '1.125rem',
+                    fontWeight: '600',
+                    color: 'white',
+                    backgroundColor: loading ? '#9ca3af' : '#3b82f6',
+                    border: 'none',
+                    borderRadius: '8px',
+                    cursor: loading ? 'not-allowed' : 'pointer',
+                    transition: 'background-color 0.2s',
+                    opacity: loading ? 0.5 : 1
+                  }}
+                  onMouseEnter={(e) => !loading && (e.target.style.backgroundColor = '#2563eb')}
+                  onMouseLeave={(e) => !loading && (e.target.style.backgroundColor = '#3b82f6')}
+                >
+                  {loading ? 'Searching...' : 'Search'}
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -68,24 +114,43 @@ export default function Home() {
         {/* Results */}
         <div className="space-y-8">
           {papers.length > 0 && (
-            <div className="bg-white border border-gray-200 shadow-md">
-              <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                <h2 className="text-xl font-semibold text-gray-900">Found {papers.length} papers</h2>
+            <div style={{
+              backgroundColor: 'white',
+              borderRadius: '12px',
+              border: '1px solid #e2e8f0',
+              boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
+              overflow: 'hidden'
+            }}>
+              <div style={{
+                padding: '1.5rem 2rem',
+                backgroundColor: '#f8fafc',
+                borderBottom: '1px solid #e2e8f0'
+              }}>
+                <h2 style={{
+                  fontSize: '1.5rem',
+                  fontWeight: '700',
+                  color: '#1e293b'
+                }}>Found {papers.length} papers</h2>
               </div>
-              <div className="divide-y divide-gray-100">
+              <div className="divide-y" style={{ borderColor: 'rgba(226, 232, 240, 0.3)' }}>
                 {papers.map((paper, index) => (
                   <div key={index}>
                     {/* Paper Card */}
                     <div 
-                      className="px-6 py-5 cursor-pointer transition-all duration-200 group border-l-4 border-transparent"
-                      style={{backgroundColor: 'white'}}
+                      className="px-8 py-6 cursor-pointer transition-all duration-300 group"
+                      style={{
+                        background: 'rgba(255, 255, 255, 0.8)',
+                        borderLeft: '4px solid transparent'
+                      }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = '#eef2ff'
-                        e.currentTarget.style.borderLeftColor = '#818cf8'
+                        e.currentTarget.style.background = 'linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.05) 100%)'
+                        e.currentTarget.style.borderLeftColor = '#667eea'
+                        e.currentTarget.style.transform = 'translateX(4px)'
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = 'white'
+                        e.currentTarget.style.background = 'rgba(255, 255, 255, 0.8)'
                         e.currentTarget.style.borderLeftColor = 'transparent'
+                        e.currentTarget.style.transform = 'translateX(0px)'
                       }}
                       onClick={() => {
                         console.log('Paper clicked:', paper.title)
@@ -105,53 +170,81 @@ export default function Home() {
                     {/* Expanded Details */}
                     {expandedPaper?.title === paper.title && (
                       <div 
-                        className="px-8 py-8 border-t" 
-                        style={{ backgroundColor: '#f8fafc', borderTopColor: '#e2e8f0' }}
+                        className="px-10 py-10" 
+                        style={{ 
+                          background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.08) 100%)',
+                          borderTop: '1px solid rgba(102, 126, 234, 0.2)'
+                        }}
                       >
                         <div className="space-y-8">
                           {/* Full Abstract */}
                           <div>
-                            <h4 className="text-xl font-semibold text-gray-900 mb-4">Abstract</h4>
+                            <h4 className="text-2xl font-bold text-gray-900 mb-6">Abstract</h4>
                             <p className="text-gray-700 leading-relaxed text-lg">{paper.abstract}</p>
                           </div>
 
                           {/* Actions */}
                           <div className="flex gap-4">
                             <button 
-                              className="px-6 py-3 font-medium transition-all shadow-sm"
+                              className="px-8 py-4 font-semibold transition-all shadow-lg"
                               style={{
-                                backgroundColor: 'white',
-                                border: '2px solid #e5e7eb',
-                                color: '#374151'
+                                background: 'rgba(255, 255, 255, 0.9)',
+                                border: '2px solid rgba(102, 126, 234, 0.3)',
+                                color: '#4b5563',
+                                borderRadius: '16px'
                               }}
-                              onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
-                              onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
+                              onMouseEnter={(e) => {
+                                e.target.style.background = 'rgba(102, 126, 234, 0.1)'
+                                e.target.style.transform = 'translateY(-2px)'
+                                e.target.style.boxShadow = '0 10px 25px rgba(102, 126, 234, 0.2)'
+                              }}
+                              onMouseLeave={(e) => {
+                                e.target.style.background = 'rgba(255, 255, 255, 0.9)'
+                                e.target.style.transform = 'translateY(0px)'
+                                e.target.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)'
+                              }}
                             >
-                              Extract Concepts
+                              🔍 Extract Concepts
                             </button>
                             <button 
-                              className="px-6 py-3 font-medium transition-all shadow-sm"
+                              className="px-8 py-4 font-semibold transition-all shadow-lg"
                               style={{
-                                backgroundColor: 'white',
-                                border: '2px solid #e5e7eb',
-                                color: '#374151'
+                                background: 'rgba(255, 255, 255, 0.9)',
+                                border: '2px solid rgba(102, 126, 234, 0.3)',
+                                color: '#4b5563',
+                                borderRadius: '16px'
                               }}
-                              onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
-                              onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
+                              onMouseEnter={(e) => {
+                                e.target.style.background = 'rgba(102, 126, 234, 0.1)'
+                                e.target.style.transform = 'translateY(-2px)'
+                                e.target.style.boxShadow = '0 10px 25px rgba(102, 126, 234, 0.2)'
+                              }}
+                              onMouseLeave={(e) => {
+                                e.target.style.background = 'rgba(255, 255, 255, 0.9)'
+                                e.target.style.transform = 'translateY(0px)'
+                                e.target.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)'
+                              }}
                             >
-                              Find Related
+                              🔗 Find Related
                             </button>
                             <button 
-                              className="px-6 py-3 font-medium transition-all shadow-sm"
+                              className="px-8 py-4 font-semibold transition-all shadow-lg"
                               style={{
-                                backgroundColor: '#4f46e5',
-                                border: '2px solid #4f46e5',
-                                color: 'white'
+                                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                                border: 'none',
+                                color: 'white',
+                                borderRadius: '16px'
                               }}
-                              onMouseEnter={(e) => e.target.style.backgroundColor = '#4338ca'}
-                              onMouseLeave={(e) => e.target.style.backgroundColor = '#4f46e5'}
+                              onMouseEnter={(e) => {
+                                e.target.style.transform = 'translateY(-2px)'
+                                e.target.style.boxShadow = '0 15px 35px rgba(102, 126, 234, 0.4)'
+                              }}
+                              onMouseLeave={(e) => {
+                                e.target.style.transform = 'translateY(0px)'
+                                e.target.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)'
+                              }}
                             >
-                              Add to Graph
+                              ✨ Add to Graph
                             </button>
                           </div>
                         </div>
@@ -169,30 +262,6 @@ export default function Home() {
             </div>
           )}
 
-          {!query && (
-            <div className="bg-white border border-gray-200 shadow-md px-8 py-12 text-center">
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">
-                Enhanced Literature Review Assistant
-              </h2>
-              <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
-                Search for research papers and build interactive concept maps with AI assistance
-              </p>
-              <div className="grid md:grid-cols-3 gap-8 text-left max-w-4xl mx-auto">
-                <div className="p-6 bg-blue-50 border border-blue-200 hover:bg-blue-100 transition-colors">
-                  <h3 className="font-semibold text-blue-900 mb-2">AI-Powered Search</h3>
-                  <p className="text-blue-700">Find relevant papers across multiple databases</p>
-                </div>
-                <div className="p-6 bg-green-50 border border-green-200 hover:bg-green-100 transition-colors">
-                  <h3 className="font-semibold text-green-900 mb-2">Concept Mapping</h3>
-                  <p className="text-green-700">Visualize relationships between ideas and papers</p>
-                </div>
-                <div className="p-6 bg-purple-50 border border-purple-200 hover:bg-purple-100 transition-colors">
-                  <h3 className="font-semibold text-purple-900 mb-2">Smart Summaries</h3>
-                  <p className="text-purple-700">Get AI-generated insights and key findings</p>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
       </div>
 
