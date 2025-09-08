@@ -1,24 +1,17 @@
 {
   "name": "litra",
   "version": "1.0.0",
-  "description": "Enhanced Literature Review Assistant with AI-powered concept mapping",
+  "description": "AI Literature Review Assistant with paper library and analysis",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "server": "node server/index.js"
+    "lint": "next lint"
   },
   "dependencies": {
     "next": "^14.0.0",
     "react": "^18.0.0",
-    "react-dom": "^18.0.0",
-    "axios": "^1.6.0",
-    "express": "^4.18.2",
-    "cors": "^2.8.5",
-    "dotenv": "^16.3.1",
-    "openai": "^4.24.0",
-    "mongoose": "^8.0.0"
+    "react-dom": "^18.0.0"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
