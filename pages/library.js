@@ -25,6 +25,7 @@ export default function Library() {
     if (pendingPaper) {
       try {
         const paper = JSON.parse(pendingPaper)
+        console.log('Adding pending paper to library:', paper.title)
         addPaperToLibrary(paper)
         localStorage.removeItem('pendingLibraryPaper')
       } catch (e) {
@@ -34,11 +35,33 @@ export default function Library() {
   }, [])
 
   const addPaperToLibrary = async (paper) => {
+    console.log('addPaperToLibrary called with:', paper.title)
+    
     // Generate summary for this paper
     const summary = await generatePaperSummary(paper)
     const paperWithSummary = { ...paper, summary, id: Date.now() }
     
-    const newPapers = [...papers, paperWithSummary]
+    // Get current papers from localStorage to ensure we have the latest state
+    const currentSavedPapers = localStorage.getItem('savedPapers')
+    const existingPapers = currentSavedPapers ? JSON.parse(currentSavedPapers) : []
+    
+    console.log('Existing papers count:', existingPapers.length)
+    console.log('Existing papers:', existingPapers.map(p => p.title))
+    
+    // Check if paper already exists (by title) to avoid duplicates
+    const isDuplicate = existingPapers.some(existingPaper => 
+      existingPaper.title === paper.title
+    )
+    
+    if (isDuplicate) {
+      console.log('Paper already exists in library:', paper.title)
+      return
+    }
+    
+    const newPapers = [...existingPapers, paperWithSummary]
+    console.log('New papers count:', newPapers.length)
+    console.log('New papers:', newPapers.map(p => p.title))
+    
     setPapers(newPapers)
     
     // Save to localStorage

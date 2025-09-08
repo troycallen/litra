@@ -1,10 +1,23 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 export default function Home() {
   const [query, setQuery] = useState('')
   const [papers, setPapers] = useState([])
   const [loading, setLoading] = useState(false)
   const [expandedPaper, setExpandedPaper] = useState(null)
+
+  // Load saved search results from localStorage on component mount
+  useEffect(() => {
+    const savedSearchResults = localStorage.getItem('searchResults')
+    if (savedSearchResults) {
+      try {
+        const parsedResults = JSON.parse(savedSearchResults)
+        setPapers(parsedResults)
+      } catch (e) {
+        console.error('Failed to load saved search results:', e)
+      }
+    }
+  }, [])
 
   const searchPapers = async () => {
     if (!query.trim()) return
@@ -14,7 +27,11 @@ export default function Home() {
       // Basic ArXiv search implementation
       const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`)
       const data = await response.json()
-      setPapers(data.papers || [])
+      const searchResults = data.papers || []
+      
+      // Save search results to localStorage
+      setPapers(searchResults)
+      localStorage.setItem('searchResults', JSON.stringify(searchResults))
     } catch (error) {
       console.error('Search failed:', error)
     } finally {
@@ -79,8 +96,17 @@ export default function Home() {
         <div className="space-y-4">
           {papers.length > 0 && (
             <div className="terminal-card overflow-hidden">
-              <div className="px-4 py-3 border-b border-gray-700">
+              <div className="px-4 py-3 border-b border-gray-700 flex items-center justify-between">
                 <h2 className="text-sm font-mono text-yellow-400">// found {papers.length} results</h2>
+                <button
+                  onClick={() => {
+                    setPapers([])
+                    localStorage.removeItem('searchResults')
+                  }}
+                  className="text-xs font-mono text-gray-400 hover:text-red-400 transition-colors px-2 py-1 hover:bg-red-400 hover:bg-opacity-10 rounded"
+                >
+                  [clear]
+                </button>
               </div>
               <div className="divide-y divide-gray-700">
                 {papers.map((paper, index) => (
