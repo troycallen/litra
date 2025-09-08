@@ -26,41 +26,45 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       {/* Header */}
-      <header className="modern-header">
-        <div className="max-w-7xl mx-auto px-6 py-8">
+      <header className="terminal-header">
+        <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <h1 className="text-4xl font-bold tracking-tight gradient-text">
-              LiTRA
+            <h1 className="text-xl terminal-title tracking-wide">
+              ~/litra $
             </h1>
-            <p className="text-gray-600 text-lg font-medium">Literature Review Assistant</p>
+            <p className="text-gray-400 text-sm font-mono">literature review assistant</p>
           </div>
         </div>
       </header>
 
       <div className="max-w-6xl mx-auto px-6 py-12">
         {/* Search Section */}
-        <div className="mb-12">
+        <div className="mb-8">
           <div className="max-w-4xl mx-auto">
-            <div className="modern-card p-8">
-              <div className="flex gap-4">
+            <div className="terminal-card p-4">
+              <div className="mb-3">
+                <span className="text-green-400 font-mono text-sm">search@papers:</span>
+              </div>
+              <div className="flex gap-3">
+                <span className="text-gray-400 font-mono">$</span>
                 <input
                   type="text"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && searchPapers()}
-                  placeholder="Search research papers..."
-                  className="flex-1 p-4 text-lg font-medium text-gray-800 bg-gray-50 border-2 border-gray-200 rounded-lg outline-none transition-all focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
+                  placeholder="query --arxiv"
+                  className="flex-1 bg-transparent border-none outline-none text-gray-100 font-mono placeholder-gray-500"
                 />
                 <button
                   onClick={searchPapers}
                   disabled={loading}
-                  className={`px-8 py-4 text-lg font-semibold text-white rounded-lg transition-all ${
+                  className={`px-4 py-1 text-sm font-mono border rounded transition-colors ${
                     loading 
-                      ? 'bg-gray-400 cursor-not-allowed opacity-50' 
-                      : 'bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5'
+                      ? 'border-gray-600 text-gray-500 cursor-not-allowed' 
+                      : 'border-green-400 text-green-400 hover:bg-green-400 hover:bg-opacity-20'
                   }`}
                 >
-                  {loading ? 'Searching...' : 'Search'}
+                  {loading ? '[searching...]' : '[execute]'}
                 </button>
               </div>
             </div>
@@ -68,53 +72,58 @@ export default function Home() {
         </div>
 
         {/* Results */}
-        <div className="space-y-8">
+        <div className="space-y-4">
           {papers.length > 0 && (
-            <div className="modern-card overflow-hidden">
-              <div className="px-8 py-6 bg-gradient-to-r from-indigo-50 to-purple-50 border-b border-indigo-100">
-                <h2 className="text-2xl font-bold gradient-text">Found {papers.length} papers</h2>
+            <div className="terminal-card overflow-hidden">
+              <div className="px-4 py-3 border-b border-gray-700">
+                <h2 className="text-sm font-mono text-yellow-400">// found {papers.length} results</h2>
               </div>
-              <div className="divide-y" style={{ borderColor: 'rgba(226, 232, 240, 0.3)' }}>
+              <div className="divide-y divide-gray-700">
                 {papers.map((paper, index) => (
                   <div key={index}>
                     {/* Paper Card */}
                     <div 
-                      className="px-8 py-6 cursor-pointer transition-all duration-300 group bg-white bg-opacity-80 border-l-4 border-transparent hover:bg-gradient-to-r hover:from-indigo-50 hover:to-purple-50 hover:border-indigo-400 hover:transform hover:translate-x-1"
+                      className="px-4 py-4 cursor-pointer transition-colors hover:bg-gray-800 border-l-2 border-transparent hover:border-green-400"
                       onClick={() => {
                         console.log('Paper clicked:', paper.title)
                         setExpandedPaper(expandedPaper?.title === paper.title ? null : paper)
                       }}
                     >
-                      <h3 className="text-lg font-semibold text-gray-900 group-hover:text-indigo-700 transition-colors leading-tight mb-3">
-                        {paper.title}
-                      </h3>
-                      <div className="flex items-center gap-4 text-sm text-gray-600">
-                        <span className="font-medium">{paper.authors}</span>
-                        <span className="text-gray-400">•</span>
-                        <span>{new Date(paper.publishedDate).toLocaleDateString()}</span>
+                      <div className="flex items-start gap-3">
+                        <span className="text-green-400 font-mono text-sm mt-1">[{index + 1}]</span>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="text-sm font-mono text-gray-100 hover:text-green-400 transition-colors leading-tight mb-2">
+                            {paper.title}
+                          </h3>
+                          <div className="flex items-center gap-4 text-xs text-gray-400 font-mono">
+                            <span>by: {paper.authors}</span>
+                            <span>|</span>
+                            <span>{new Date(paper.publishedDate).toLocaleDateString()}</span>
+                          </div>
+                        </div>
                       </div>
                     </div>
 
                     {/* Expanded Details */}
                     {expandedPaper?.title === paper.title && (
-                      <div className="px-10 py-10 bg-gradient-to-r from-indigo-25 to-purple-25 border-t border-indigo-200">
-                        <div className="space-y-8">
+                      <div className="px-4 py-4 bg-gray-900 border-t border-gray-700">
+                        <div className="space-y-4">
                           {/* Full Abstract */}
                           <div>
-                            <h4 className="text-2xl font-bold gradient-text mb-6">Abstract</h4>
-                            <p className="text-gray-700 leading-relaxed text-lg">{paper.abstract}</p>
+                            <div className="text-xs font-mono text-yellow-400 mb-2">// abstract:</div>
+                            <p className="text-sm text-gray-300 leading-relaxed font-mono pl-4 border-l-2 border-gray-600">{paper.abstract}</p>
                           </div>
 
                           {/* Actions */}
-                          <div className="flex gap-4">
-                            <button className="px-8 py-4 font-semibold transition-all shadow-lg bg-white bg-opacity-90 border-2 border-indigo-200 text-gray-600 rounded-2xl hover:bg-indigo-50 hover:border-indigo-300 hover:transform hover:-translate-y-1 hover:shadow-xl">
-                              🔍 Extract Concepts
+                          <div className="flex gap-3 flex-wrap pt-2">
+                            <button className="px-3 py-1 text-xs font-mono border border-blue-400 text-blue-400 hover:bg-blue-400 hover:bg-opacity-20 transition-colors">
+                              --extract-concepts
                             </button>
-                            <button className="px-8 py-4 font-semibold transition-all shadow-lg bg-white bg-opacity-90 border-2 border-indigo-200 text-gray-600 rounded-2xl hover:bg-indigo-50 hover:border-indigo-300 hover:transform hover:-translate-y-1 hover:shadow-xl">
-                              🔗 Find Related
+                            <button className="px-3 py-1 text-xs font-mono border border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:bg-opacity-20 transition-colors">
+                              --find-related
                             </button>
-                            <button className="px-8 py-4 font-semibold transition-all shadow-lg bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-2xl hover:from-indigo-600 hover:to-purple-700 hover:transform hover:-translate-y-1 hover:shadow-xl">
-                              ✨ Add to Graph
+                            <button className="px-3 py-1 text-xs font-mono border border-green-400 text-green-400 hover:bg-green-400 hover:bg-opacity-20 transition-colors">
+                              --add-to-graph
                             </button>
                           </div>
                         </div>
@@ -127,8 +136,8 @@ export default function Home() {
           )}
 
           {papers.length === 0 && query && !loading && (
-            <div className="modern-card px-6 py-8 text-center">
-              <p className="text-gray-600">No papers found for <span className="font-medium gradient-text">"{query}"</span></p>
+            <div className="terminal-card px-4 py-6 text-center">
+              <p className="text-gray-400 font-mono text-sm">// no results found for <span className="text-red-400">"{query}"</span></p>
             </div>
           )}
 
