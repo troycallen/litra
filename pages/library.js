@@ -258,14 +258,13 @@ Research Gaps:
       <header className="terminal-header">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <h1 className="text-xl terminal-title tracking-wide">
+            <a href="/" className="text-xl terminal-title tracking-wide hover:text-green-300 transition-colors">
               ~/litra/library $
-            </h1>
+            </a>
             <div className="flex items-center gap-4">
               <a href="/" className="text-gray-400 text-sm font-mono hover:text-green-400 transition-colors">
                 ← search
               </a>
-              <p className="text-gray-400 text-sm font-mono">paper library & ai analysis</p>
             </div>
           </div>
         </div>
