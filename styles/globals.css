@@ -69,3 +69,12 @@ body {
   border-radius: 4px !important;
   box-shadow: none !important;
 }
+
+/* Additional utility classes for better readability */
+.bg-gray-750 {
+  background-color: #374151;
+}
+
+.bg-gray-850 {
+  background-color: #1f2937;
+}
