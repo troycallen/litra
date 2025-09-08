@@ -32,7 +32,12 @@ export default function Home() {
             <h1 className="text-xl terminal-title tracking-wide">
               ~/litra $
             </h1>
-            <p className="text-gray-400 text-sm font-mono">literature review assistant</p>
+            <div className="flex items-center gap-4">
+              <a href="/library" className="text-gray-400 text-sm font-mono hover:text-green-400 transition-colors">
+                library →
+              </a>
+              <p className="text-gray-400 text-sm font-mono">literature review assistant</p>
+            </div>
           </div>
         </div>
       </header>
@@ -122,8 +127,15 @@ export default function Home() {
                             <button className="px-3 py-1 text-xs font-mono border border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:bg-opacity-20 transition-colors">
                               --find-related
                             </button>
-                            <button className="px-3 py-1 text-xs font-mono border border-green-400 text-green-400 hover:bg-green-400 hover:bg-opacity-20 transition-colors">
-                              --add-to-graph
+                            <button 
+                              className="px-3 py-1 text-xs font-mono border border-green-400 text-green-400 hover:bg-green-400 hover:bg-opacity-20 transition-colors"
+                              onClick={() => {
+                                // Store paper data for library and redirect
+                                localStorage.setItem('pendingLibraryPaper', JSON.stringify(paper))
+                                window.location.href = '/library'
+                              }}
+                            >
+                              --add-to-library
                             </button>
                           </div>
                         </div>
