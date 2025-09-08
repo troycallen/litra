@@ -7,8 +7,8 @@ export default async function handler(req, res) {
   try {
     const { action, ...data } = req.body
     
-    // Python backend URL
-    const PYTHON_BACKEND = process.env.PYTHON_BACKEND_URL || 'http://localhost:5000'
+    // FastAPI backend URL
+    const FASTAPI_BACKEND = process.env.FASTAPI_BACKEND_URL || 'http://localhost:5000'
     
     let endpoint
     switch (action) {
@@ -28,7 +28,7 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'Invalid action' })
     }
     
-    const response = await fetch(`${PYTHON_BACKEND}${endpoint}`, {
+    const response = await fetch(`${FASTAPI_BACKEND}${endpoint}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -37,14 +37,14 @@ export default async function handler(req, res) {
     })
     
     if (!response.ok) {
-      throw new Error(`Python backend responded with status: ${response.status}`)
+      throw new Error(`FastAPI backend responded with status: ${response.status}`)
     }
     
     const result = await response.json()
     res.json(result)
     
   } catch (error) {
-    console.error('Python backend error:', error)
+    console.error('FastAPI backend error:', error)
     
     // Fallback responses when Python backend is not available
     const { action } = req.body
@@ -86,7 +86,7 @@ export default async function handler(req, res) {
     }
     
     return res.status(500).json({ 
-      error: 'Python backend unavailable. Install and run: cd python_backend && python app.py',
+      error: 'FastAPI backend unavailable. Install and run: cd backend && pip install -r requirements.txt && python main.py',
       fallback_used: true
     })
   }
