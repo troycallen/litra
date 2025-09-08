@@ -5,6 +5,7 @@ export default function Home() {
   const [papers, setPapers] = useState([])
   const [loading, setLoading] = useState(false)
   const [expandedPaper, setExpandedPaper] = useState(null)
+  const [analyzingPaper, setAnalyzingPaper] = useState(null)
 
   // Load saved search results from localStorage on component mount
   useEffect(() => {
@@ -36,6 +37,55 @@ export default function Home() {
       console.error('Search failed:', error)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const analyzePaper = async (paper, analysisType) => {
+    setAnalyzingPaper(paper.title)
+    
+    try {
+      let action, data
+      
+      switch (analysisType) {
+        case 'concepts':
+          action = 'extract-concepts'
+          data = { text: paper.abstract }
+          break
+        case 'related':
+          action = 'find-related'
+          data = { concepts: paper.concepts || [], title: paper.title }
+          break
+        case 'full':
+          action = 'analyze-paper'
+          data = { title: paper.title, abstract: paper.abstract }
+          break
+        default:
+          return
+      }
+      
+      const response = await fetch('/api/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action, ...data })
+      })
+      
+      if (response.ok) {
+        const result = await response.json()
+        
+        // Update paper with analysis results
+        const updatedPapers = papers.map(p => 
+          p.title === paper.title 
+            ? { ...p, analysis: { ...p.analysis, ...result } }
+            : p
+        )
+        
+        setPapers(updatedPapers)
+        localStorage.setItem('searchResults', JSON.stringify(updatedPapers))
+      }
+    } catch (error) {
+      console.error('Analysis failed:', error)
+    } finally {
+      setAnalyzingPaper(null)
     }
   }
 
@@ -146,11 +196,23 @@ export default function Home() {
 
                           {/* Actions */}
                           <div className="flex gap-3 flex-wrap pt-2">
-                            <button className="px-3 py-1 text-xs font-mono border border-blue-400 text-blue-400 hover:bg-blue-400 hover:bg-opacity-20 transition-colors">
-                              --extract-concepts
+                            <button 
+                              onClick={() => analyzePaper(paper, 'concepts')}
+                              disabled={analyzingPaper === paper.title}
+                              className={`px-3 py-1 text-xs font-mono border border-blue-400 text-blue-400 hover:bg-blue-400 hover:bg-opacity-20 transition-colors ${
+                                analyzingPaper === paper.title ? 'opacity-50 cursor-not-allowed' : ''
+                              }`}
+                            >
+                              {analyzingPaper === paper.title ? '[analyzing...]' : '--extract-concepts'}
                             </button>
-                            <button className="px-3 py-1 text-xs font-mono border border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:bg-opacity-20 transition-colors">
-                              --find-related
+                            <button 
+                              onClick={() => analyzePaper(paper, 'related')}
+                              disabled={analyzingPaper === paper.title}
+                              className={`px-3 py-1 text-xs font-mono border border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:bg-opacity-20 transition-colors ${
+                                analyzingPaper === paper.title ? 'opacity-50 cursor-not-allowed' : ''
+                              }`}
+                            >
+                              {analyzingPaper === paper.title ? '[analyzing...]' : '--find-related'}
                             </button>
                             <button 
                               className="px-3 py-1 text-xs font-mono border border-green-400 text-green-400 hover:bg-green-400 hover:bg-opacity-20 transition-colors"
@@ -163,6 +225,29 @@ export default function Home() {
                               --add-to-library
                             </button>
                           </div>
+
+                          {/* Analysis Results */}
+                          {paper.analysis && (
+                            <div className="mt-4 pt-3 border-t border-gray-600">
+                              <div className="text-xs font-mono text-yellow-400 mb-2">// analysis results:</div>
+                              {paper.analysis.concepts && (
+                                <div className="mb-2">
+                                  <span className="text-xs font-mono text-blue-400">concepts:</span>
+                                  <div className="text-xs font-mono text-gray-400 ml-2">
+                                    {paper.analysis.concepts.join(', ')}
+                                  </div>
+                                </div>
+                              )}
+                              {paper.analysis.related_papers && (
+                                <div>
+                                  <span className="text-xs font-mono text-yellow-400">related papers:</span>
+                                  <div className="text-xs font-mono text-gray-400 ml-2">
+                                    {paper.analysis.related_papers.length} papers found
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          )}
                         </div>
                       </div>
                     )}
