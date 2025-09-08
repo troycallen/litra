@@ -24,31 +24,15 @@ export default function Home() {
 
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      backgroundColor: '#f8fafc'
-    }}>
+    <div className="min-h-screen">
       {/* Header */}
-      <header style={{
-        backgroundColor: 'white',
-        borderBottom: '1px solid #e2e8f0',
-        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)'
-      }}>
+      <header className="modern-header">
         <div className="max-w-7xl mx-auto px-6 py-8">
           <div className="flex items-center justify-between">
-            <h1 style={{
-              fontSize: '2.5rem',
-              fontWeight: '700',
-              letterSpacing: '-0.025em',
-              color: '#1e293b'
-            }}>
+            <h1 className="text-4xl font-bold tracking-tight gradient-text">
               LiTRA
             </h1>
-            <p style={{
-              color: '#64748b',
-              fontSize: '1.125rem',
-              fontWeight: '500'
-            }}>Literature Review Assistant</p>
+            <p className="text-gray-600 text-lg font-medium">Literature Review Assistant</p>
           </div>
         </div>
       </header>
@@ -57,13 +41,7 @@ export default function Home() {
         {/* Search Section */}
         <div className="mb-12">
           <div className="max-w-4xl mx-auto">
-            <div style={{
-              backgroundColor: 'white',
-              borderRadius: '12px',
-              border: '1px solid #e2e8f0',
-              boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
-              padding: '2rem'
-            }}>
+            <div className="modern-card p-8">
               <div className="flex gap-4">
                 <input
                   type="text"
@@ -71,38 +49,16 @@ export default function Home() {
                   onChange={(e) => setQuery(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && searchPapers()}
                   placeholder="Search research papers..."
-                  style={{
-                    flex: 1,
-                    padding: '1rem 1.5rem',
-                    fontSize: '1.125rem',
-                    fontWeight: '500',
-                    color: '#1e293b',
-                    backgroundColor: '#f8fafc',
-                    border: '2px solid #e2e8f0',
-                    borderRadius: '8px',
-                    outline: 'none',
-                    transition: 'border-color 0.2s'
-                  }}
-                  onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
-                  onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
+                  className="flex-1 p-4 text-lg font-medium text-gray-800 bg-gray-50 border-2 border-gray-200 rounded-lg outline-none transition-all focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
                 />
                 <button
                   onClick={searchPapers}
                   disabled={loading}
-                  style={{
-                    padding: '1rem 2rem',
-                    fontSize: '1.125rem',
-                    fontWeight: '600',
-                    color: 'white',
-                    backgroundColor: loading ? '#9ca3af' : '#3b82f6',
-                    border: 'none',
-                    borderRadius: '8px',
-                    cursor: loading ? 'not-allowed' : 'pointer',
-                    transition: 'background-color 0.2s',
-                    opacity: loading ? 0.5 : 1
-                  }}
-                  onMouseEnter={(e) => !loading && (e.target.style.backgroundColor = '#2563eb')}
-                  onMouseLeave={(e) => !loading && (e.target.style.backgroundColor = '#3b82f6')}
+                  className={`px-8 py-4 text-lg font-semibold text-white rounded-lg transition-all ${
+                    loading 
+                      ? 'bg-gray-400 cursor-not-allowed opacity-50' 
+                      : 'bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5'
+                  }`}
                 >
                   {loading ? 'Searching...' : 'Search'}
                 </button>
@@ -114,44 +70,16 @@ export default function Home() {
         {/* Results */}
         <div className="space-y-8">
           {papers.length > 0 && (
-            <div style={{
-              backgroundColor: 'white',
-              borderRadius: '12px',
-              border: '1px solid #e2e8f0',
-              boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
-              overflow: 'hidden'
-            }}>
-              <div style={{
-                padding: '1.5rem 2rem',
-                backgroundColor: '#f8fafc',
-                borderBottom: '1px solid #e2e8f0'
-              }}>
-                <h2 style={{
-                  fontSize: '1.5rem',
-                  fontWeight: '700',
-                  color: '#1e293b'
-                }}>Found {papers.length} papers</h2>
+            <div className="modern-card overflow-hidden">
+              <div className="px-8 py-6 bg-gradient-to-r from-indigo-50 to-purple-50 border-b border-indigo-100">
+                <h2 className="text-2xl font-bold gradient-text">Found {papers.length} papers</h2>
               </div>
               <div className="divide-y" style={{ borderColor: 'rgba(226, 232, 240, 0.3)' }}>
                 {papers.map((paper, index) => (
                   <div key={index}>
                     {/* Paper Card */}
                     <div 
-                      className="px-8 py-6 cursor-pointer transition-all duration-300 group"
-                      style={{
-                        background: 'rgba(255, 255, 255, 0.8)',
-                        borderLeft: '4px solid transparent'
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.background = 'linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.05) 100%)'
-                        e.currentTarget.style.borderLeftColor = '#667eea'
-                        e.currentTarget.style.transform = 'translateX(4px)'
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.background = 'rgba(255, 255, 255, 0.8)'
-                        e.currentTarget.style.borderLeftColor = 'transparent'
-                        e.currentTarget.style.transform = 'translateX(0px)'
-                      }}
+                      className="px-8 py-6 cursor-pointer transition-all duration-300 group bg-white bg-opacity-80 border-l-4 border-transparent hover:bg-gradient-to-r hover:from-indigo-50 hover:to-purple-50 hover:border-indigo-400 hover:transform hover:translate-x-1"
                       onClick={() => {
                         console.log('Paper clicked:', paper.title)
                         setExpandedPaper(expandedPaper?.title === paper.title ? null : paper)
@@ -169,81 +97,23 @@ export default function Home() {
 
                     {/* Expanded Details */}
                     {expandedPaper?.title === paper.title && (
-                      <div 
-                        className="px-10 py-10" 
-                        style={{ 
-                          background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.08) 100%)',
-                          borderTop: '1px solid rgba(102, 126, 234, 0.2)'
-                        }}
-                      >
+                      <div className="px-10 py-10 bg-gradient-to-r from-indigo-25 to-purple-25 border-t border-indigo-200">
                         <div className="space-y-8">
                           {/* Full Abstract */}
                           <div>
-                            <h4 className="text-2xl font-bold text-gray-900 mb-6">Abstract</h4>
+                            <h4 className="text-2xl font-bold gradient-text mb-6">Abstract</h4>
                             <p className="text-gray-700 leading-relaxed text-lg">{paper.abstract}</p>
                           </div>
 
                           {/* Actions */}
                           <div className="flex gap-4">
-                            <button 
-                              className="px-8 py-4 font-semibold transition-all shadow-lg"
-                              style={{
-                                background: 'rgba(255, 255, 255, 0.9)',
-                                border: '2px solid rgba(102, 126, 234, 0.3)',
-                                color: '#4b5563',
-                                borderRadius: '16px'
-                              }}
-                              onMouseEnter={(e) => {
-                                e.target.style.background = 'rgba(102, 126, 234, 0.1)'
-                                e.target.style.transform = 'translateY(-2px)'
-                                e.target.style.boxShadow = '0 10px 25px rgba(102, 126, 234, 0.2)'
-                              }}
-                              onMouseLeave={(e) => {
-                                e.target.style.background = 'rgba(255, 255, 255, 0.9)'
-                                e.target.style.transform = 'translateY(0px)'
-                                e.target.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)'
-                              }}
-                            >
+                            <button className="px-8 py-4 font-semibold transition-all shadow-lg bg-white bg-opacity-90 border-2 border-indigo-200 text-gray-600 rounded-2xl hover:bg-indigo-50 hover:border-indigo-300 hover:transform hover:-translate-y-1 hover:shadow-xl">
                               🔍 Extract Concepts
                             </button>
-                            <button 
-                              className="px-8 py-4 font-semibold transition-all shadow-lg"
-                              style={{
-                                background: 'rgba(255, 255, 255, 0.9)',
-                                border: '2px solid rgba(102, 126, 234, 0.3)',
-                                color: '#4b5563',
-                                borderRadius: '16px'
-                              }}
-                              onMouseEnter={(e) => {
-                                e.target.style.background = 'rgba(102, 126, 234, 0.1)'
-                                e.target.style.transform = 'translateY(-2px)'
-                                e.target.style.boxShadow = '0 10px 25px rgba(102, 126, 234, 0.2)'
-                              }}
-                              onMouseLeave={(e) => {
-                                e.target.style.background = 'rgba(255, 255, 255, 0.9)'
-                                e.target.style.transform = 'translateY(0px)'
-                                e.target.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)'
-                              }}
-                            >
+                            <button className="px-8 py-4 font-semibold transition-all shadow-lg bg-white bg-opacity-90 border-2 border-indigo-200 text-gray-600 rounded-2xl hover:bg-indigo-50 hover:border-indigo-300 hover:transform hover:-translate-y-1 hover:shadow-xl">
                               🔗 Find Related
                             </button>
-                            <button 
-                              className="px-8 py-4 font-semibold transition-all shadow-lg"
-                              style={{
-                                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                                border: 'none',
-                                color: 'white',
-                                borderRadius: '16px'
-                              }}
-                              onMouseEnter={(e) => {
-                                e.target.style.transform = 'translateY(-2px)'
-                                e.target.style.boxShadow = '0 15px 35px rgba(102, 126, 234, 0.4)'
-                              }}
-                              onMouseLeave={(e) => {
-                                e.target.style.transform = 'translateY(0px)'
-                                e.target.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)'
-                              }}
-                            >
+                            <button className="px-8 py-4 font-semibold transition-all shadow-lg bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-2xl hover:from-indigo-600 hover:to-purple-700 hover:transform hover:-translate-y-1 hover:shadow-xl">
                               ✨ Add to Graph
                             </button>
                           </div>
@@ -257,8 +127,8 @@ export default function Home() {
           )}
 
           {papers.length === 0 && query && !loading && (
-            <div className="bg-white border border-gray-200 shadow-md px-6 py-8 text-center">
-              <p className="text-gray-600">No papers found for <span className="font-medium text-gray-900">"{query}"</span></p>
+            <div className="modern-card px-6 py-8 text-center">
+              <p className="text-gray-600">No papers found for <span className="font-medium gradient-text">"{query}"</span></p>
             </div>
           )}
 
