@@ -4,6 +4,11 @@ export default function Library() {
   const [papers, setPapers] = useState([])
   const [metaSummary, setMetaSummary] = useState('')
   const [isUpdatingMeta, setIsUpdatingMeta] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [searchResults, setSearchResults] = useState([])
+  const [isSearching, setIsSearching] = useState(false)
+  const [showCitation, setShowCitation] = useState({})
+  const [citationStyle, setCitationStyle] = useState('apa')
 
   // Load saved papers from localStorage
   useEffect(() => {
@@ -266,6 +271,81 @@ Research Gaps:
     }
   }
 
+  const handleSearch = async () => {
+    if (!searchQuery.trim() || papers.length === 0) {
+      return
+    }
+
+    setIsSearching(true)
+    setSearchResults([])
+
+    try {
+      const response = await fetch('/api/query', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'search',
+          query: searchQuery,
+          papers: papers
+        })
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setSearchResults(data.results || [])
+      } else {
+        console.error('Search failed')
+      }
+    } catch (error) {
+      console.error('Search error:', error)
+    } finally {
+      setIsSearching(false)
+    }
+  }
+
+  const clearSearch = () => {
+    setSearchQuery('')
+    setSearchResults([])
+  }
+
+  const generateCitation = async (paper, style = 'apa') => {
+    try {
+      const response = await fetch('/api/query', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'citation',
+          paper: paper,
+          style: style
+        })
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        return data.citation
+      }
+    } catch (error) {
+      console.error('Citation generation failed:', error)
+    }
+    return 'Citation generation failed'
+  }
+
+  const toggleCitation = async (paperId) => {
+    const paper = papers.find(p => p.id === paperId)
+    if (!paper) return
+
+    if (showCitation[paperId]) {
+      setShowCitation(prev => ({ ...prev, [paperId]: null }))
+    } else {
+      const citation = await generateCitation(paper, citationStyle)
+      setShowCitation(prev => ({ ...prev, [paperId]: citation }))
+    }
+  }
+
+  const copyCitation = (citation) => {
+    navigator.clipboard.writeText(citation)
+  }
+
   return (
     <div className="min-h-screen">
       {/* Header */}
@@ -286,9 +366,66 @@ Research Gaps:
 
       <div className="max-w-7xl mx-auto px-6 py-6">
         <div className="grid grid-cols-3 gap-6">
-          
-          {/* Meta Summary */}
-          <div className="col-span-1">
+
+          {/* Left Column: Meta Summary + Search */}
+          <div className="col-span-1 space-y-6">
+            {/* Search Interface */}
+            <div className="terminal-card">
+              <div className="px-4 py-3 border-b border-gray-700">
+                <h3 className="text-sm font-mono text-green-400">// query library</h3>
+              </div>
+              <div className="p-4">
+                <div className="flex gap-2 mb-3">
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                    placeholder="search papers..."
+                    className="flex-1 bg-gray-800 border border-gray-600 rounded px-3 py-2 text-sm font-mono text-gray-300 focus:outline-none focus:border-green-400"
+                    disabled={papers.length === 0}
+                  />
+                  <button
+                    onClick={handleSearch}
+                    disabled={!searchQuery.trim() || papers.length === 0 || isSearching}
+                    className="px-3 py-2 bg-green-600 text-white text-sm font-mono rounded hover:bg-green-700 disabled:bg-gray-600 disabled:cursor-not-allowed"
+                  >
+                    {isSearching ? '...' : 'search'}
+                  </button>
+                </div>
+
+                {searchQuery && (
+                  <button
+                    onClick={clearSearch}
+                    className="text-xs font-mono text-gray-400 hover:text-gray-300"
+                  >
+                    clear search
+                  </button>
+                )}
+
+                {searchResults.length > 0 && (
+                  <div className="mt-4 pt-3 border-t border-gray-600">
+                    <div className="text-xs font-mono text-yellow-400 mb-2">
+                      // found {searchResults.length} results for "{searchQuery}"
+                    </div>
+                    <div className="space-y-2">
+                      {searchResults.slice(0, 3).map((result, idx) => (
+                        <div key={idx} className="text-xs font-mono">
+                          <div className="text-gray-300">
+                            [{idx + 1}] {result.paper.title.substring(0, 60)}...
+                          </div>
+                          <div className="text-gray-500 ml-4">
+                            score: {result.score.toFixed(1)}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Meta Summary */}
             <div className="terminal-card h-fit">
               <div className="px-4 py-3 border-b border-gray-700">
                 <h3 className="text-sm font-mono text-yellow-400">// research overview</h3>
@@ -316,7 +453,18 @@ Research Gaps:
             <div className="terminal-card">
               <div className="px-4 py-3 border-b border-gray-700 flex items-center justify-between">
                 <h3 className="text-sm font-mono text-yellow-400">// saved papers</h3>
-                <div className="text-xs font-mono text-gray-500">{papers.length} papers</div>
+                <div className="flex items-center gap-4">
+                  <select
+                    value={citationStyle}
+                    onChange={(e) => setCitationStyle(e.target.value)}
+                    className="bg-gray-800 border border-gray-600 rounded px-2 py-1 text-xs font-mono text-gray-300"
+                  >
+                    <option value="apa">APA</option>
+                    <option value="mla">MLA</option>
+                    <option value="bibtex">BibTeX</option>
+                  </select>
+                  <div className="text-xs font-mono text-gray-500">{papers.length} papers</div>
+                </div>
               </div>
               
               {papers.length === 0 ? (
@@ -355,26 +503,52 @@ Research Gaps:
                         </p>
                         
                         {/* Analysis Actions */}
-                        <div className="flex gap-2 flex-wrap">
-                          <button 
+                        <div className="flex gap-2 flex-wrap mb-3">
+                          <button
                             onClick={() => analyzePaper(paper, 'concepts')}
                             className="px-2 py-1 text-xs font-mono border border-blue-400 text-blue-400 hover:bg-blue-400 hover:bg-opacity-20 transition-colors"
                           >
                             --extract-concepts
                           </button>
-                          <button 
+                          <button
                             onClick={() => analyzePaper(paper, 'related')}
                             className="px-2 py-1 text-xs font-mono border border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:bg-opacity-20 transition-colors"
                           >
                             --find-related
                           </button>
-                          <button 
+                          <button
                             onClick={() => analyzePaper(paper, 'full')}
                             className="px-2 py-1 text-xs font-mono border border-green-400 text-green-400 hover:bg-green-400 hover:bg-opacity-20 transition-colors"
                           >
                             --full-analysis
                           </button>
+                          <button
+                            onClick={() => toggleCitation(paper.id)}
+                            className="px-2 py-1 text-xs font-mono border border-purple-400 text-purple-400 hover:bg-purple-400 hover:bg-opacity-20 transition-colors"
+                          >
+                            --cite
+                          </button>
                         </div>
+
+                        {/* Citation Display */}
+                        {showCitation[paper.id] && (
+                          <div className="mt-3 pt-3 border-t border-gray-600">
+                            <div className="flex items-center justify-between mb-2">
+                              <span className="text-xs font-mono text-purple-400">citation ({citationStyle}):</span>
+                              <button
+                                onClick={() => copyCitation(showCitation[paper.id])}
+                                className="text-xs font-mono text-gray-400 hover:text-gray-300"
+                              >
+                                [copy]
+                              </button>
+                            </div>
+                            <div className="bg-gray-800 p-3 rounded border border-gray-600">
+                              <pre className="text-xs font-mono text-gray-300 whitespace-pre-wrap">
+                                {showCitation[paper.id]}
+                              </pre>
+                            </div>
+                          </div>
+                        )}
                         
                         {/* Analysis Results */}
                         {paper.analysis && (
