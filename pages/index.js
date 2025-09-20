@@ -63,10 +63,26 @@ export default function Home() {
           return
       }
       
-      const response = await fetch('/api/analyze', {
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
+      let endpoint
+      switch (action) {
+        case 'extract-concepts':
+          endpoint = '/api/extract-concepts'
+          break
+        case 'find-related':
+          endpoint = '/api/find-related'
+          break
+        case 'analyze-paper':
+          endpoint = '/api/analyze-paper'
+          break
+        default:
+          return
+      }
+
+      const response = await fetch(`${API_BASE_URL}${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action, ...data })
+        body: JSON.stringify(data)
       })
       
       if (response.ok) {

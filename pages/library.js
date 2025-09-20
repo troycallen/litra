@@ -70,11 +70,11 @@ export default function Library() {
   const generatePaperSummary = async (paper) => {
     try {
       // Try to use Python backend for AI analysis
-      const response = await fetch('/api/analyze', {
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
+      const response = await fetch(`${API_BASE_URL}/api/generate-summary`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          action: 'generate-summary',
           title: paper.title,
           abstract: paper.abstract
         })
@@ -139,19 +139,22 @@ export default function Library() {
       // Try to generate AI-powered meta-summary using all abstracts
       const allAbstracts = paperList.map(p => p.abstract).join(' ')
       
-      const response = await fetch('/api/analyze', {
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
+      const response = await fetch(`${API_BASE_URL}/api/meta-summary`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          action: 'generate-summary',
-          title: `Research Collection Analysis (${paperList.length} papers)`,
-          abstract: allAbstracts
+          papers: paperList.map(p => ({
+            title: p.title,
+            abstract: p.abstract,
+            authors: p.authors
+          }))
         })
       })
       
       if (response.ok) {
         const data = await response.json()
-        const aiSummary = data.summary
+        const aiSummary = data.meta_summary
         
         // Generate meta-summary based on all papers
         const topics = paperList.map(p => extractMainTopic(p.title))
@@ -236,10 +239,26 @@ Research Gaps:
           return
       }
       
-      const response = await fetch('/api/analyze', {
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
+      let endpoint
+      switch (action) {
+        case 'extract-concepts':
+          endpoint = '/api/extract-concepts'
+          break
+        case 'find-related':
+          endpoint = '/api/find-related'
+          break
+        case 'analyze-paper':
+          endpoint = '/api/analyze-paper'
+          break
+        default:
+          return
+      }
+
+      const response = await fetch(`${API_BASE_URL}${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action, ...data })
+        body: JSON.stringify(data)
       })
       
       if (response.ok) {
@@ -280,13 +299,18 @@ Research Gaps:
     setSearchResults([])
 
     try {
-      const response = await fetch('/api/query', {
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
+      const response = await fetch(`${API_BASE_URL}/api/query-papers`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          action: 'search',
           query: searchQuery,
-          papers: papers
+          papers: papers.map(p => ({
+            title: p.title,
+            abstract: p.abstract,
+            authors: p.authors,
+            published_date: p.publishedDate
+          }))
         })
       })
 
@@ -310,12 +334,17 @@ Research Gaps:
 
   const generateCitation = async (paper, style = 'apa') => {
     try {
-      const response = await fetch('/api/query', {
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
+      const response = await fetch(`${API_BASE_URL}/api/generate-citation`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          action: 'citation',
-          paper: paper,
+          paper: {
+            title: paper.title,
+            abstract: paper.abstract,
+            authors: paper.authors,
+            published_date: paper.publishedDate
+          },
           style: style
         })
       })

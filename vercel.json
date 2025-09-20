@@ -1,0 +1,10 @@
+{
+  "build": {
+    "env": {
+      "NEXT_PUBLIC_API_URL": "@api_url"
+    }
+  },
+  "env": {
+    "NEXT_PUBLIC_API_URL": "@api_url"
+  }
+}
