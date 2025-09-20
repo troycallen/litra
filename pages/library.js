@@ -352,12 +352,12 @@ Research Gaps:
       <header className="terminal-header">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <a href="/" className="text-xl terminal-title tracking-wide hover:text-green-300 transition-colors">
-              ~/litra/library $
+            <a href="/" className="text-xl text-green-400 font-semibold tracking-wide hover:text-green-300 transition-colors">
+              LiTRA Library
             </a>
             <div className="flex items-center gap-4">
-              <a href="/" className="text-gray-400 text-sm font-mono hover:text-green-400 transition-colors">
-                ← search
+              <a href="/" className="text-gray-400 text-sm hover:text-green-400 transition-colors">
+                ← Back to Search
               </a>
             </div>
           </div>
@@ -372,7 +372,7 @@ Research Gaps:
             {/* Search Interface */}
             <div className="terminal-card">
               <div className="px-4 py-3 border-b border-gray-700">
-                <h3 className="text-sm font-mono text-green-400">// query library</h3>
+                <h3 className="text-sm font-semibold text-green-400">Search Library</h3>
               </div>
               <div className="p-4">
                 <div className="flex gap-2 mb-3">
@@ -382,13 +382,13 @@ Research Gaps:
                     onChange={(e) => setSearchQuery(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
                     placeholder="search papers..."
-                    className="flex-1 bg-gray-800 border border-gray-600 rounded px-3 py-2 text-sm font-mono text-gray-300 focus:outline-none focus:border-green-400"
+                    className="flex-1 bg-gray-800 border border-gray-600 rounded px-3 py-2 text-sm text-gray-300 focus:outline-none focus:border-green-400"
                     disabled={papers.length === 0}
                   />
                   <button
                     onClick={handleSearch}
                     disabled={!searchQuery.trim() || papers.length === 0 || isSearching}
-                    className="px-3 py-2 bg-green-600 text-white text-sm font-mono rounded hover:bg-green-700 disabled:bg-gray-600 disabled:cursor-not-allowed"
+                    className="px-3 py-2 bg-green-600 text-white text-sm rounded hover:bg-green-700 disabled:bg-gray-600 disabled:cursor-not-allowed"
                   >
                     {isSearching ? '...' : 'search'}
                   </button>
@@ -397,7 +397,7 @@ Research Gaps:
                 {searchQuery && (
                   <button
                     onClick={clearSearch}
-                    className="text-xs font-mono text-gray-400 hover:text-gray-300"
+                    className="text-xs text-gray-400 hover:text-gray-300"
                   >
                     clear search
                   </button>
@@ -405,14 +405,14 @@ Research Gaps:
 
                 {searchResults.length > 0 && (
                   <div className="mt-4 pt-3 border-t border-gray-600">
-                    <div className="text-xs font-mono text-yellow-400 mb-2">
-                      // found {searchResults.length} results for "{searchQuery}"
+                    <div className="text-xs text-yellow-400 mb-2 font-medium">
+                      Found {searchResults.length} results for "{searchQuery}"
                     </div>
                     <div className="space-y-2">
                       {searchResults.slice(0, 3).map((result, idx) => (
-                        <div key={idx} className="text-xs font-mono">
+                        <div key={idx} className="text-xs">
                           <div className="text-gray-300">
-                            [{idx + 1}] {result.paper.title.substring(0, 60)}...
+                            {idx + 1}. {result.paper.title.substring(0, 60)}...
                           </div>
                           <div className="text-gray-500 ml-4">
                             score: {result.score.toFixed(1)}
@@ -428,20 +428,20 @@ Research Gaps:
             {/* Meta Summary */}
             <div className="terminal-card h-fit">
               <div className="px-4 py-3 border-b border-gray-700">
-                <h3 className="text-sm font-mono text-yellow-400">// research overview</h3>
+                <h3 className="text-sm font-semibold text-yellow-400">Research Overview</h3>
               </div>
               <div className="p-4">
                 {isUpdatingMeta ? (
-                  <div className="text-xs font-mono text-gray-500">
-                    [generating meta-summary...]
+                  <div className="text-xs text-gray-500">
+                    Generating overview...
                   </div>
                 ) : metaSummary ? (
-                  <div className="text-xs font-mono text-gray-300 leading-relaxed whitespace-pre-line">
+                  <div className="text-xs text-gray-300 leading-relaxed whitespace-pre-line">
                     {metaSummary}
                   </div>
                 ) : (
-                  <div className="text-xs font-mono text-gray-500">
-                    // add papers to see research overview
+                  <div className="text-xs text-gray-500">
+                    Add papers to see research overview
                   </div>
                 )}
               </div>
@@ -452,26 +452,26 @@ Research Gaps:
           <div className="col-span-2">
             <div className="terminal-card">
               <div className="px-4 py-3 border-b border-gray-700 flex items-center justify-between">
-                <h3 className="text-sm font-mono text-yellow-400">// saved papers</h3>
+                <h3 className="text-sm font-semibold text-yellow-400">Saved Papers</h3>
                 <div className="flex items-center gap-4">
                   <select
                     value={citationStyle}
                     onChange={(e) => setCitationStyle(e.target.value)}
-                    className="bg-gray-800 border border-gray-600 rounded px-2 py-1 text-xs font-mono text-gray-300"
+                    className="bg-gray-800 border border-gray-600 rounded px-2 py-1 text-xs text-gray-300"
                   >
                     <option value="apa">APA</option>
                     <option value="mla">MLA</option>
                     <option value="bibtex">BibTeX</option>
                   </select>
-                  <div className="text-xs font-mono text-gray-500">{papers.length} papers</div>
+                  <div className="text-xs text-gray-500">{papers.length} papers</div>
                 </div>
               </div>
               
               {papers.length === 0 ? (
                 <div className="p-8 text-center">
-                  <p className="text-gray-500 font-mono text-sm">
-                    // no papers saved yet<br />
-                    <span className="text-gray-600">use --add-to-library from search results</span>
+                  <p className="text-gray-500 text-sm">
+                    No papers saved yet<br />
+                    <span className="text-gray-600">Add papers from search results</span>
                   </p>
                 </div>
               ) : (
@@ -479,26 +479,26 @@ Research Gaps:
                   {papers.map((paper, index) => (
                     <div key={paper.id} className="p-4">
                       <div className="flex items-start gap-3 mb-3">
-                        <span className="text-green-400 font-mono text-sm mt-1">[{index + 1}]</span>
+                        <span className="text-green-400 text-sm mt-1 font-medium">{index + 1}.</span>
                         <div className="flex-1 min-w-0">
-                          <h4 className="text-sm font-mono text-gray-100 leading-tight mb-1">
+                          <h4 className="text-sm text-gray-100 leading-tight mb-1 font-medium">
                             {paper.title}
                           </h4>
-                          <div className="text-xs text-gray-400 font-mono mb-2">
+                          <div className="text-xs text-gray-400 mb-2">
                             {paper.authors} • {new Date(paper.publishedDate).toLocaleDateString()}
                           </div>
                         </div>
                         <button
                           onClick={() => removePaper(paper.id)}
-                          className="text-red-400 hover:text-red-300 text-xs font-mono"
+                          className="text-red-400 hover:text-red-300 text-xs"
                         >
-                          [remove]
+                          remove
                         </button>
                       </div>
                       
                       <div className="ml-6 pl-4 border-l-2 border-gray-600">
-                        <div className="text-xs font-mono text-yellow-400 mb-1">// summary:</div>
-                        <p className="text-xs font-mono text-gray-300 leading-relaxed mb-3">
+                        <div className="text-xs text-yellow-400 mb-1 font-medium">Summary:</div>
+                        <p className="text-xs text-gray-300 leading-relaxed mb-3">
                           {paper.summary}
                         </p>
                         
@@ -506,27 +506,27 @@ Research Gaps:
                         <div className="flex gap-2 flex-wrap mb-3">
                           <button
                             onClick={() => analyzePaper(paper, 'concepts')}
-                            className="px-2 py-1 text-xs font-mono border border-blue-400 text-blue-400 hover:bg-blue-400 hover:bg-opacity-20 transition-colors"
+                            className="px-2 py-1 text-xs border border-blue-400 text-blue-400 hover:bg-blue-400 hover:bg-opacity-20 transition-colors rounded"
                           >
-                            --extract-concepts
+                            Extract Concepts
                           </button>
                           <button
                             onClick={() => analyzePaper(paper, 'related')}
-                            className="px-2 py-1 text-xs font-mono border border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:bg-opacity-20 transition-colors"
+                            className="px-2 py-1 text-xs border border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:bg-opacity-20 transition-colors rounded"
                           >
-                            --find-related
+                            Find Related
                           </button>
                           <button
                             onClick={() => analyzePaper(paper, 'full')}
-                            className="px-2 py-1 text-xs font-mono border border-green-400 text-green-400 hover:bg-green-400 hover:bg-opacity-20 transition-colors"
+                            className="px-2 py-1 text-xs border border-green-400 text-green-400 hover:bg-green-400 hover:bg-opacity-20 transition-colors rounded"
                           >
-                            --full-analysis
+                            Full Analysis
                           </button>
                           <button
                             onClick={() => toggleCitation(paper.id)}
-                            className="px-2 py-1 text-xs font-mono border border-purple-400 text-purple-400 hover:bg-purple-400 hover:bg-opacity-20 transition-colors"
+                            className="px-2 py-1 text-xs border border-purple-400 text-purple-400 hover:bg-purple-400 hover:bg-opacity-20 transition-colors rounded"
                           >
-                            --cite
+                            Generate Citation
                           </button>
                         </div>
 
@@ -534,16 +534,16 @@ Research Gaps:
                         {showCitation[paper.id] && (
                           <div className="mt-3 pt-3 border-t border-gray-600">
                             <div className="flex items-center justify-between mb-2">
-                              <span className="text-xs font-mono text-purple-400">citation ({citationStyle}):</span>
+                              <span className="text-xs text-purple-400 font-medium">Citation ({citationStyle}):</span>
                               <button
                                 onClick={() => copyCitation(showCitation[paper.id])}
-                                className="text-xs font-mono text-gray-400 hover:text-gray-300"
+                                className="text-xs text-gray-400 hover:text-gray-300"
                               >
-                                [copy]
+                                copy
                               </button>
                             </div>
                             <div className="bg-gray-800 p-3 rounded border border-gray-600">
-                              <pre className="text-xs font-mono text-gray-300 whitespace-pre-wrap">
+                              <pre className="text-xs text-gray-300 whitespace-pre-wrap">
                                 {showCitation[paper.id]}
                               </pre>
                             </div>
@@ -553,19 +553,19 @@ Research Gaps:
                         {/* Analysis Results */}
                         {paper.analysis && (
                           <div className="mt-3 pt-3 border-t border-gray-600">
-                            <div className="text-xs font-mono text-yellow-400 mb-2">// analysis results:</div>
+                            <div className="text-xs text-yellow-400 mb-2 font-medium">Analysis Results:</div>
                             {paper.analysis.concepts && (
                               <div className="mb-2">
-                                <span className="text-xs font-mono text-blue-400">concepts:</span>
-                                <div className="text-xs font-mono text-gray-400 ml-2">
+                                <span className="text-xs text-blue-400 font-medium">Concepts:</span>
+                                <div className="text-xs text-gray-400 ml-2">
                                   {paper.analysis.concepts.join(', ')}
                                 </div>
                               </div>
                             )}
                             {paper.analysis.related_papers && (
                               <div>
-                                <span className="text-xs font-mono text-yellow-400">related papers:</span>
-                                <div className="text-xs font-mono text-gray-400 ml-2">
+                                <span className="text-xs text-yellow-400 font-medium">Related Papers:</span>
+                                <div className="text-xs text-gray-400 ml-2">
                                   {paper.analysis.related_papers.length} papers found
                                 </div>
                               </div>

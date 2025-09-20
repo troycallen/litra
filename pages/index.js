@@ -96,12 +96,12 @@ export default function Home() {
       <header className="terminal-header">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <a href="/" className="text-xl terminal-title tracking-wide hover:text-green-300 transition-colors">
-              ~/litra $
+            <a href="/" className="text-xl text-green-400 font-semibold tracking-wide hover:text-green-300 transition-colors">
+              LiTRA Research
             </a>
             <div className="flex items-center gap-4">
-              <a href="/library" className="text-gray-400 text-sm font-mono hover:text-green-400 transition-colors">
-                library →
+              <a href="/library" className="text-gray-400 text-sm hover:text-green-400 transition-colors">
+                Library →
               </a>
             </div>
           </div>
@@ -114,28 +114,27 @@ export default function Home() {
           <div className="max-w-4xl mx-auto">
             <div className="terminal-card p-4">
               <div className="mb-3">
-                <span className="text-green-400 font-mono text-sm">search@papers:</span>
+                <span className="text-green-400 text-sm font-medium">Search Papers</span>
               </div>
               <div className="flex gap-3">
-                <span className="text-gray-400 font-mono">$</span>
                 <input
                   type="text"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && searchPapers()}
-                  placeholder="query --arxiv"
-                  className="flex-1 bg-transparent border-none outline-none text-gray-100 font-mono placeholder-gray-500"
+                  placeholder="Enter research topic or keywords..."
+                  className="flex-1 bg-transparent border-none outline-none text-gray-100 placeholder-gray-500"
                 />
                 <button
                   onClick={searchPapers}
                   disabled={loading}
-                  className={`px-4 py-1 text-sm font-mono border rounded transition-colors ${
+                  className={`px-4 py-1 text-sm border rounded transition-colors ${
                     loading 
                       ? 'border-gray-600 text-gray-500 cursor-not-allowed' 
                       : 'border-green-400 text-green-400 hover:bg-green-400 hover:bg-opacity-20'
                   }`}
                 >
-                  {loading ? '[searching...]' : '[execute]'}
+                  {loading ? 'Searching...' : 'Search'}
                 </button>
               </div>
             </div>
@@ -147,15 +146,15 @@ export default function Home() {
           {papers.length > 0 && (
             <div className="terminal-card overflow-hidden">
               <div className="px-4 py-3 border-b border-gray-700 flex items-center justify-between">
-                <h2 className="text-sm font-mono text-yellow-400">// found {papers.length} results</h2>
+                <h2 className="text-sm font-semibold text-yellow-400">Found {papers.length} Results</h2>
                 <button
                   onClick={() => {
                     setPapers([])
                     localStorage.removeItem('searchResults')
                   }}
-                  className="text-xs font-mono text-gray-400 hover:text-red-400 transition-colors px-2 py-1 hover:bg-red-400 hover:bg-opacity-10 rounded"
+                  className="text-xs text-gray-400 hover:text-red-400 transition-colors px-2 py-1 hover:bg-red-400 hover:bg-opacity-10 rounded"
                 >
-                  [clear]
+                  Clear
                 </button>
               </div>
               <div className="divide-y divide-gray-700">
@@ -170,12 +169,12 @@ export default function Home() {
                       }}
                     >
                       <div className="flex items-start gap-3">
-                        <span className="text-green-400 font-mono text-sm mt-1">[{index + 1}]</span>
+                        <span className="text-green-400 text-sm mt-1 font-medium">{index + 1}.</span>
                         <div className="flex-1 min-w-0">
-                          <h3 className="text-sm font-mono text-gray-100 hover:text-green-400 transition-colors leading-tight mb-2">
+                          <h3 className="text-sm text-gray-100 hover:text-green-400 transition-colors leading-tight mb-2 font-medium">
                             {paper.title}
                           </h3>
-                          <div className="flex items-center gap-4 text-xs text-gray-400 font-mono">
+                          <div className="flex items-center gap-4 text-xs text-gray-400">
                             <span>by: {paper.authors}</span>
                             <span>|</span>
                             <span>{new Date(paper.publishedDate).toLocaleDateString()}</span>
@@ -190,8 +189,8 @@ export default function Home() {
                         <div className="space-y-4">
                           {/* Full Abstract */}
                           <div>
-                            <div className="text-xs font-mono text-yellow-400 mb-2">// abstract:</div>
-                            <p className="text-sm text-gray-300 leading-relaxed font-mono pl-4 border-l-2 border-gray-600">{paper.abstract}</p>
+                            <div className="text-xs text-yellow-400 mb-2 font-medium">Abstract:</div>
+                            <p className="text-sm text-gray-300 leading-relaxed pl-4 border-l-2 border-gray-600">{paper.abstract}</p>
                           </div>
 
                           {/* Actions */}
@@ -199,49 +198,49 @@ export default function Home() {
                             <button 
                               onClick={() => analyzePaper(paper, 'concepts')}
                               disabled={analyzingPaper === paper.title}
-                              className={`px-3 py-1 text-xs font-mono border border-blue-400 text-blue-400 hover:bg-blue-400 hover:bg-opacity-20 transition-colors ${
+                              className={`px-3 py-1 text-xs border border-blue-400 text-blue-400 hover:bg-blue-400 hover:bg-opacity-20 transition-colors rounded ${
                                 analyzingPaper === paper.title ? 'opacity-50 cursor-not-allowed' : ''
                               }`}
                             >
-                              {analyzingPaper === paper.title ? '[analyzing...]' : '--extract-concepts'}
+                              {analyzingPaper === paper.title ? 'Analyzing...' : 'Extract Concepts'}
                             </button>
                             <button 
                               onClick={() => analyzePaper(paper, 'related')}
                               disabled={analyzingPaper === paper.title}
-                              className={`px-3 py-1 text-xs font-mono border border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:bg-opacity-20 transition-colors ${
+                              className={`px-3 py-1 text-xs border border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:bg-opacity-20 transition-colors rounded ${
                                 analyzingPaper === paper.title ? 'opacity-50 cursor-not-allowed' : ''
                               }`}
                             >
-                              {analyzingPaper === paper.title ? '[analyzing...]' : '--find-related'}
+                              {analyzingPaper === paper.title ? 'Analyzing...' : 'Find Related'}
                             </button>
                             <button 
-                              className="px-3 py-1 text-xs font-mono border border-green-400 text-green-400 hover:bg-green-400 hover:bg-opacity-20 transition-colors"
+                              className="px-3 py-1 text-xs border border-green-400 text-green-400 hover:bg-green-400 hover:bg-opacity-20 transition-colors rounded"
                               onClick={() => {
                                 // Store paper data for library and redirect
                                 localStorage.setItem('pendingLibraryPaper', JSON.stringify(paper))
                                 window.location.href = '/library'
                               }}
                             >
-                              --add-to-library
+                              Add to Library
                             </button>
                           </div>
 
                           {/* Analysis Results */}
                           {paper.analysis && (
                             <div className="mt-4 pt-3 border-t border-gray-600">
-                              <div className="text-xs font-mono text-yellow-400 mb-2">// analysis results:</div>
+                              <div className="text-xs text-yellow-400 mb-2 font-medium">Analysis Results:</div>
                               {paper.analysis.concepts && (
                                 <div className="mb-2">
-                                  <span className="text-xs font-mono text-blue-400">concepts:</span>
-                                  <div className="text-xs font-mono text-gray-400 ml-2">
+                                  <span className="text-xs text-blue-400 font-medium">Concepts:</span>
+                                  <div className="text-xs text-gray-400 ml-2">
                                     {paper.analysis.concepts.join(', ')}
                                   </div>
                                 </div>
                               )}
                               {paper.analysis.related_papers && (
                                 <div>
-                                  <span className="text-xs font-mono text-yellow-400">related papers:</span>
-                                  <div className="text-xs font-mono text-gray-400 ml-2">
+                                  <span className="text-xs text-yellow-400 font-medium">Related Papers:</span>
+                                  <div className="text-xs text-gray-400 ml-2">
                                     {paper.analysis.related_papers.length} papers found
                                   </div>
                                 </div>
@@ -259,7 +258,7 @@ export default function Home() {
 
           {papers.length === 0 && query && !loading && (
             <div className="terminal-card px-4 py-6 text-center">
-              <p className="text-gray-400 font-mono text-sm">// no results found for <span className="text-red-400">"{query}"</span></p>
+              <p className="text-gray-400 text-sm">No results found for <span className="text-red-400">"{query}"</span></p>
             </div>
           )}
 
