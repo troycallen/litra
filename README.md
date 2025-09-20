@@ -1,33 +1,71 @@
-# LiTRA - AI Literature Review Assistant
+# LiTRA - Literature Review Assistant
 
-A terminal-style web application for building and analyzing research paper collections with AI-powered insights.
+AI-powered research assistant for literature review with local LLM processing.
 
 ## Features
 
-- **Paper Search**: Search ArXiv for research papers
-- **AI Analysis**: Extract concepts, generate summaries, and find related papers
-- **Paper Library**: Build a curated collection of papers with evolving overviews
-- **Meta-Analysis**: Get AI-powered insights across your entire paper collection
+- 🔍 ArXiv paper search
+- 🤖 Local AI analysis with Ollama (Llama 3.1)
+- 📚 Personal research library
+- 🔗 Related paper discovery
+- 📝 Citation generation (APA, MLA, BibTeX)
+- 📊 Meta-analysis across papers
 
-## Quick Start
+## Deployment
 
-1. **Frontend**: `npm run dev` (runs on http://localhost:3000)
-2. **Backend**: `cd backend && pip install -r requirements.txt && python main.py` (runs on http://localhost:5000)
+### Railway (Backend)
 
-## Usage
+1. Create new Railway project from GitHub repo
+2. Set environment variables in Railway dashboard:
+   ```
+   OLLAMA_BASE_URL=http://localhost:11434
+   OLLAMA_MODEL=llama3.1:8b
+   ```
+3. Deploy - Railway will auto-install Ollama and download the model
 
-1. Search for papers using the main interface
-2. Add interesting papers to your library
-3. Use AI analysis tools to extract concepts and find related work
-4. Build up an evolving overview of your research domain
+### Vercel (Frontend)
 
-## Architecture
+1. Import project to Vercel from GitHub
+2. Set environment variable:
+   ```
+   NEXT_PUBLIC_API_URL=https://your-backend.railway.app
+   ```
+3. Deploy
 
-- **Frontend**: Next.js with terminal-style UI
-- **Backend**: FastAPI with OpenAI integration and NLTK text processing
-- **Storage**: Local browser storage for paper collections
-- **AI**: GPT-3.5-turbo for intelligent paper analysis and meta-summaries
+## Local Development
 
-## API Documentation
+1. Install dependencies:
+   ```bash
+   npm install
+   pip install -r requirements.txt
+   ```
 
-When the FastAPI backend is running, visit http://localhost:5000/docs for interactive API documentation.
+2. Install and start Ollama:
+   ```bash
+   # Install Ollama
+   curl -fsSL https://ollama.com/install.sh | sh
+
+   # Download model
+   ollama pull llama3.1:8b
+
+   # Start Ollama
+   ollama serve
+   ```
+
+3. Start backend:
+   ```bash
+   cd backend
+   uvicorn main:app --reload --port 5000
+   ```
+
+4. Start frontend:
+   ```bash
+   npm run dev
+   ```
+
+## Tech Stack
+
+- **Frontend**: Next.js, React, Tailwind CSS
+- **Backend**: FastAPI, Python
+- **LLM**: Ollama (Llama 3.1 8B)
+- **Deployment**: Vercel + Railway
